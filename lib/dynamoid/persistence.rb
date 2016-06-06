@@ -16,8 +16,10 @@ module Dynamoid
     module ClassMethods
 
       def table_name
-        name = options[:name] ||  "#{base_class.name.split('::').last.downcase.pluralize}"
-        @table_name ||= [Dynamoid::Config.namespace, name].compact.join('_')
+        @table_name ||= (
+          name = options[:name] ||  "#{base_class.name.split('::').last.downcase.pluralize}"
+          [Dynamoid::Config.namespace, name].compact.join('_')
+        )
       end
 
       # Creates a table.
