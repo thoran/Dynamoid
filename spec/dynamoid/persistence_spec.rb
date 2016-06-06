@@ -49,6 +49,16 @@ describe Dynamoid::Persistence do
     expect(Dynamoid.adapter.read("dynamoid_tests_addresses", 'test123')).to_not be_empty
   end
 
+  it 'is namespaced when there is a namespace' do
+    Dynamoid::Config.namespace = 'namespace'
+    expect(Address.table_name.split('_').first).to eq 'namespace'
+  end
+
+  it "isn't namespaced when there isn't a namespace" do
+    Dynamoid::Config.namespace = nil
+    expect(Address.table_name).to eq 'dynamoid_tests_addresses'
+  end
+
   it 'has a table name' do
     expect(Address.table_name).to eq 'dynamoid_tests_addresses'
   end
