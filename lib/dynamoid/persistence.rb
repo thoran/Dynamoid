@@ -17,7 +17,7 @@ module Dynamoid
 
       def table_name
         @table_name ||= (
-          name = options[:name] ||  "#{base_class.name.split('::').last.downcase.pluralize}"
+          name = options[:name] || "#{base_class.name.split('::').last.downcase.pluralize}"
           [Dynamoid::Config.namespace, name].compact.join('_')
         )
       end

@@ -12,7 +12,7 @@ describe Dynamoid::Persistence do
       it 'creates a table' do
         Address.create_table(:table_name => Address.table_name)
 
-        expect(Dynamoid.adapter.list_tables).to include 'dynamoid_tests_addresses'
+        expect(Dynamoid.adapter.list_tables).to include 'addresses'
       end
 
       it 'checks if a table already exists' do
@@ -27,7 +27,7 @@ describe Dynamoid::Persistence do
   it 'assigns itself an id on save' do
     address.save
 
-    expect(Dynamoid.adapter.read("dynamoid_tests_addresses", address.id)[:id]).to eq address.id
+    expect(Dynamoid.adapter.read("addresses", address.id)[:id]).to eq address.id
   end
 
   it 'prevents concurrent writes to tables with a lock_version' do
@@ -46,28 +46,32 @@ describe Dynamoid::Persistence do
     address.id = 'test123'
     address.save
 
-    expect(Dynamoid.adapter.read("dynamoid_tests_addresses", 'test123')).to_not be_empty
+    expect(Dynamoid.adapter.read("addresses", 'test123')).to_not be_empty
   end
 
   it 'is namespaced when there is a namespace' do
-    Dynamoid::Config.namespace = 'namespace'
-    expect(Address.table_name.split('_').first).to eq 'namespace'
+    saved_namespace = Dynamoid.config.namespace
+    Dynamoid.configure{|config| config.namespace = 'namespace'}
+    expect(Dynamoid.config.namespace).to eq 'namespace'
+    Dynamoid.configure{|config| config.namespace = saved_namespace}
   end
 
   it "isn't namespaced when there isn't a namespace" do
-    Dynamoid::Config.namespace = nil
-    expect(Address.table_name).to eq 'dynamoid_tests_addresses'
+    saved_namespace = Dynamoid.config.namespace
+    Dynamoid.configure{|config| config.namespace = nil}
+    expect(Dynamoid.config.namespace).to eq nil
+    Dynamoid.configure{|config| config.namespace = saved_namespace}
   end
 
   it 'has a table name' do
-    expect(Address.table_name).to eq 'dynamoid_tests_addresses'
+    expect(Address.table_name).to eq 'addresses'
   end
 
   it 'deletes an item completely' do
     @user = User.create(:name => 'Josh')
     @user.destroy
 
-    expect(Dynamoid.adapter.read("dynamoid_tests_users", @user.id)).to be_nil
+    expect(Dynamoid.adapter.read("users", @user.id)).to be_nil
   end
 
   it 'keeps string attributes as strings' do

@@ -123,7 +123,7 @@ describe Dynamoid::Document do
     address = Address.create
 
     expect(address.id).to_not be_nil
-    expect(Address.table_name).to eq 'dynamoid_tests_addresses'
+    expect(Address.table_name).to eq 'addresses'
     expect(Address.hash_key).to eq :id
     expect(Address.read_capacity).to eq 100
     expect(Address.write_capacity).to eq 20
@@ -134,7 +134,7 @@ describe Dynamoid::Document do
 
     expect{tweet.id}.to raise_error(NoMethodError)
     expect(tweet.tweet_id).to_not be_nil
-    expect(Tweet.table_name).to eq 'dynamoid_tests_twitters'
+    expect(Tweet.table_name).to eq 'twitters'
     expect(Tweet.hash_key).to eq :tweet_id
     expect(Tweet.read_capacity).to eq 200
     expect(Tweet.write_capacity).to eq 200
